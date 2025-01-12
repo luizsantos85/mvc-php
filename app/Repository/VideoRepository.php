@@ -9,7 +9,7 @@ use PDO;
 class VideoRepository
 {
     private $pdo;
- 
+
     public function __construct()
     {
         $this->pdo = Database::getInstance();
@@ -25,11 +25,8 @@ class VideoRepository
         $videoList = $this->pdo->query('SELECT * FROM videos')
             ->fetchAll(PDO::FETCH_ASSOC);
         return array_map(
-            function (array $videoData) {
-                $video =  new Video($videoData['url'], $videoData['title']);
-                $video->setId($videoData['id']);
-                return $video;
-            }, $videoList
+            $this->assembleVideo(...), // Retornará um array de objetos Video
+            $videoList
         );
     }
 
@@ -45,14 +42,14 @@ class VideoRepository
         $sql->bindValue(':id', $id, PDO::PARAM_INT);
         $sql->execute();
 
-        if ($sql->rowCount() > 0) {
-            $data = $sql->fetch(PDO::FETCH_ASSOC);
-            $video = new Video($data['url'], $data['title']);
-            $video->setId($data['id']);
-            return $video;
-        }
+        return $this->assembleVideo($sql->fetch(PDO::FETCH_ASSOC));
+    }
 
-        return null;
+    private function assembleVideo(array $videoData): Video
+    {
+        $video = new Video($videoData['url'], $videoData['title']);
+        $video->setId($videoData['id']);
+        return $video;
     }
 
     /**

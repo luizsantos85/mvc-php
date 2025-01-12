@@ -2,41 +2,43 @@
 session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Mvc\Controller\Controller;
+use App\Mvc\Controller\NotfoundController;
+use App\Mvc\Controller\VideoController;
 use App\Mvc\Repository\VideoRepository;
-use \App\Mvc\Controller\VideoController;
 
 $rota = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$folder = '';
-$archive = '';
 $repository = new VideoRepository();
-$controller = new VideoController($repository);
+$videoController = new VideoController($repository);
+$notFoundController = new NotfoundController();
 
 switch ($rota) {
     case '/':
-        $controller->processIndex();
+        $videoController->processIndex();
         break;
 
     case '/formulario':
-        $controller->processFormulario();
+        $videoController->processFormulario();
         break;
 
     case '/editar-video':
-        $controller->processUpdateVideo();
+        $videoController->processUpdateVideo();
         break;
 
     case '/novo-video':
-        $controller->processNewVideo();
-
+        $videoController->processNewVideo();
         break;
 
     case '/excluir-video':
-        $controller->processDeleteVideo();
-
+        $videoController->processDeleteVideo();
         break;
     
     default:
-        http_response_code(404);
+        $notFoundController->processNotFound();
         break;
 }
+
+/** @var Controller $controller */
+
 

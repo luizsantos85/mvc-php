@@ -5,7 +5,7 @@ namespace App\Mvc\Controller;
 use App\Mvc\Classes\Video;
 use App\Mvc\Repository\VideoRepository;
 
-class VideoController
+class VideoController implements Controller
 {
     public function __construct(private VideoRepository $videoRepository) {}
 
@@ -43,7 +43,7 @@ class VideoController
     {
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-        $video = '';
+        $video = null;
 
         if ($id) {
             $video = $this->videoRepository->find($id);
@@ -66,16 +66,16 @@ class VideoController
                         <input name="url" class="campo__escrita"
                             placeholder="Por exemplo: https://www.youtube.com/embed/FAY1K2aUg5g"
                             id='url'
-                            value="<?= isset($video) && !empty($video->url) ? $video->url : '' ?>" />
+                            value="<?= $video?->url; ?>" />
                     </div>
 
 
                     <div class="formulario__campo">
                         <label class="campo__etiqueta" for="title">Título do vídeo</label>
                         <input name="title" class="campo__escrita" placeholder="Neste campo, dê o nome do vídeo"
-                            id='title' value="<?= isset($video) && !empty($video->title) ? $video->title : '' ?>" />
+                            id='title' value="<?= $video?->title; ?>" />
                     </div>
-                    <input type="hidden" name="id_video" value="<?= isset($video) && !empty($video->id) ? $video->id : '' ?>">
+                    <input type="hidden" name="id_video" value="<?= $video?->id; ?>">
 
                     <input class="formulario__botao" type="submit" value="Enviar" />
             </form>
@@ -89,7 +89,7 @@ class VideoController
         $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
         $id = trim(filter_input(INPUT_POST, 'id_video', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        if (!$url && !$title) {
+        if (!$url || !$title) {
             $_SESSION['flash'] = "Preencha todos os campos.";
             header("Location: /formulario?id={$id}");
             exit;
@@ -116,7 +116,7 @@ class VideoController
         $url = trim(filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL));
         $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
 
-        if (!$url && !$title) {
+        if (!$url || !$title) {
             $_SESSION['flash'] = "Preencha todos os campos.";
             header("Location: /formulario");
             exit;
