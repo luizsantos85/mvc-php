@@ -1,10 +1,3 @@
-<?php
-use App\Mvc\Repository\VideoRepository;
-
-$repository = new VideoRepository();
-$listaVideos = $repository->findAll();
-?>
-
 <?php require_once '../app/views/partials/header.php'; ?>
 
 <ul class="videos__container" alt="videos alura">

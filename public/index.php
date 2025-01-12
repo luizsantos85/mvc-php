@@ -2,35 +2,37 @@
 session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use App\Mvc\Repository\VideoRepository;
+use \App\Mvc\Controller\VideoController;
+
 $rota = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $folder = '';
 $archive = '';
+$repository = new VideoRepository();
+$controller = new VideoController($repository);
 
 switch ($rota) {
     case '/':
-        $folder = 'views';
-        $archive = 'lista-videos';
+        $controller->processIndex();
         break;
 
     case '/formulario':
-        $folder = 'views';
-        $archive = 'formulario';
+        $controller->processFormulario();
         break;
 
     case '/editar-video':
-        $folder = 'functions';
-        $archive = 'editar-video';
+        $controller->processUpdateVideo();
         break;
 
     case '/novo-video':
-        $folder = 'functions';
-        $archive = 'novo-video';
+        $controller->processNewVideo();
+
         break;
 
     case '/excluir-video':
-        $folder = 'functions';
-        $archive = 'excluir-video';
+        $controller->processDeleteVideo();
+
         break;
     
     default:
@@ -38,10 +40,3 @@ switch ($rota) {
         break;
 }
 
-require_once __DIR__ . "/../app/{$folder}/{$archive}.php";
-
-
-// echo '<pre>';
-// print_r($_SERVER);
-// echo '</pre>';
-// exit;
