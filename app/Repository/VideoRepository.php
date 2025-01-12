@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Mvc\Repository;
+namespace App\Repository;
 
-use App\Mvc\Classes\Database;
-use App\Mvc\Classes\Video;
+use App\Classes\Video;
+use Core\Database;
 use PDO;
 
 class VideoRepository

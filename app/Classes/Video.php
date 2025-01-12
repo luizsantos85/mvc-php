@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mvc\Classes;
+namespace App\Classes;
 
 class Video
 {

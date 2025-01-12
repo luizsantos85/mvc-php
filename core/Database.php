@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Mvc\Classes;
+namespace Core;
 
-use App\Mvc\Config;
+use Config\app as Config;
 
 class Database
 {

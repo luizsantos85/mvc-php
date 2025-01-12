@@ -2,7 +2,9 @@
     "name": "cuelho/mvc",
     "autoload": {
         "psr-4": {
-            "App\\Mvc\\": "app/"
+            "Config\\": "config/",
+            "Core\\": "core/",
+            "App\\": "app/"
         }
     },
     "authors": [

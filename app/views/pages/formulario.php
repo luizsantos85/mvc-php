@@ -1,24 +1,4 @@
-<?php
-
-use App\Mvc\Classes\Video;
-use App\Mvc\Repository\VideoRepository;
-
-$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-
-$video = '';
-
-if ($id) {
-    $repository = new VideoRepository();
-    $video = $repository->find($id);
-
-    if (!$video) {
-        header("Location: index.php");
-        exit;
-    }
-}
-?>
-<?php require_once '../app/views/partials/header.php'; ?>
-
+<?php $render('header'); ?>
 
 <main class="container">
     <form class="container__formulario"
@@ -45,5 +25,4 @@ if ($id) {
     </form>
 </main>
 
-
-<?php require_once '../app/views/partials/footer.php'; ?>
+<?php $render('footer'); ?>

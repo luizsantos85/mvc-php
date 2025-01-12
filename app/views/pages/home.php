@@ -1,4 +1,4 @@
-<?php require_once '../app/views/partials/header.php'; ?>
+<?php $render('header'); ?>
 
 <ul class="videos__container" alt="videos alura">
     <?php foreach ($listaVideos as $video): ?>
@@ -21,4 +21,4 @@
     <?php endforeach; ?>
 </ul>
 
-<?php require_once '../app/views/partials/footer.php'; ?>
+<?php $render('footer'); ?>
