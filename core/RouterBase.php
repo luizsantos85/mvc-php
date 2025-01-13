@@ -58,10 +58,44 @@ class RouterBase
         }
 
         $controller = 'App\\Controllers\\' . $controller;
-        $defineController = new $controller();
-        $defineController->$action($args);
+        // $defineController = new $controller();
+        // $defineController->$action($args);
         
-        // echo "Controller final: " . $controller . "<br>";
-        // echo "Action final: " . $action . "<br>";
+        $controllerInstance = $this->resolveController($controller);
+        $controllerInstance->$action($args);
+    }
+
+    /**
+     * Resolve o controller se tiver construtor
+     *
+     * @param string $controllerClass
+     * @return object
+     */
+    private function resolveController($controllerClass)
+    {
+        $reflection = new \ReflectionClass($controllerClass);
+
+        // Verifica se a classe tem construtor
+        if(!$reflection->hasMethod('__construct')) {
+            return new $controllerClass();
+        }
+
+        // Pega os parâmetros do construtor
+        $constructor = $reflection->getConstructor();
+        $parameters = $constructor->getParameters();
+
+        // Resolve os parametros
+        $dependencies = [];
+        foreach ($parameters as $parameter) {
+            $type = $parameter->getType();
+            if ($type instanceof \ReflectionNamedType) {
+                $typeName = $type->getName();
+                if(class_exists($typeName)){
+                    $dependencies[] = new $typeName();
+                }
+            }
+        }
+
+        return $reflection->newInstanceArgs($dependencies);
     }
 }

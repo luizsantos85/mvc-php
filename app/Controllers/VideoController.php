@@ -4,16 +4,15 @@ namespace App\Controllers;
 
 use Core\Controller;
 use App\Classes\Video;
-use App\Repository\VideoRepository;
+use App\Repositories\VideoRepository;
 
 class VideoController extends Controller
 {
-    // public function __construct(private VideoRepository $videoRepository) {}
+    public function __construct(private VideoRepository $videoRepository) {}
 
     public function index(): void
     {
-        $videoRepository = new VideoRepository();
-        $listaVideos = $videoRepository->findAll();
+        $listaVideos = $this->videoRepository->findAll();
 
         $this->render('home', [
             'listaVideos' => $listaVideos
@@ -26,8 +25,7 @@ class VideoController extends Controller
         $video = null;
 
         if ($id) {
-            $videoRepository = new VideoRepository();
-            $video = $videoRepository->find($id);
+            $video = $this->videoRepository->find($id);
 
             if (!$video) {
                 $this->redirect('/');
@@ -53,8 +51,7 @@ class VideoController extends Controller
         $video = new Video($url, $title);
         $video->setId($id);
 
-        $videoRepository = new VideoRepository();
-        $result = $videoRepository->update($video);
+        $result = $this->videoRepository->update($video);
 
         if ($result === false) {
             $_SESSION['flash'] = "Erro ao atualiza.";
@@ -77,8 +74,7 @@ class VideoController extends Controller
 
         $video = new Video($url, $title);
 
-        $videoRepository = new VideoRepository();
-        $result = $videoRepository->insert($video);
+        $result = $this->videoRepository->insert($video);
 
         if ($result === false) {
             $_SESSION['flash'] = "Erro ao inserir.";
@@ -94,14 +90,13 @@ class VideoController extends Controller
         $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
         if ($id) {
-            $videoRepository = new VideoRepository();
-            $video = $videoRepository->find($id);
+            $video = $this->videoRepository->find($id);
 
             if (!$video) {
                 $this->redirect('/');
             }
 
-            $result = $videoRepository->delete($id);
+            $result = $this->videoRepository->delete($id);
 
             if ($result === false) {
                 $_SESSION['flash'] = "Erro ao excluir.";
