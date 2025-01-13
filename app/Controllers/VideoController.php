@@ -47,7 +47,7 @@ class VideoController extends Controller
 
         if (!$url || !$title) {
             $_SESSION['flash'] = "Preencha todos os campos.";
-            $this->redirect('/formulario/'.$id);
+            $this->redirect('/formulario?id='.$id);
         }
 
         $video = new Video($url, $title);

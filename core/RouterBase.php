@@ -27,12 +27,12 @@ class RouterBase
             foreach ($routes[$method] as $route => $callback) {
                 // Identifica os argumentos e substitui por regex
                 $pattern = preg_replace('(\{[a-z0-9]{1,}\})', '([a-z0-9-]{1,})', $route);
-
+                
                 // Faz o match da URL
                 if (preg_match('#^(' . $pattern . ')*$#i', $url, $matches) === 1) {
                     array_shift($matches);
                     array_shift($matches);
-
+                    
                     // Pega todos os argumentos para associar
                     $itens = array();
                     if (preg_match_all('(\{[a-z0-9]{1,}\})', $route, $m)) {
@@ -60,5 +60,8 @@ class RouterBase
         $controller = 'App\\Controllers\\' . $controller;
         $defineController = new $controller();
         $defineController->$action($args);
+        
+        // echo "Controller final: " . $controller . "<br>";
+        // echo "Action final: " . $action . "<br>";
     }
 }
