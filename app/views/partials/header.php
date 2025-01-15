@@ -24,7 +24,7 @@
 
             <div class="cabecalho__icones">
                 <a href="formulario" class="cabecalho__videos"></a>
-                <a href="login.html" class="cabecalho__sair">Sair</a>
+                <a href="logout" class="cabecalho__sair">Sair</a>
             </div>
         </nav>
 
