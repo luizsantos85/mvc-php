@@ -13,6 +13,7 @@
                     <h3><?= $video->title; ?></h3>
                     <div class="acoes-video">
                         <a href="formulario?id=<?= $video->id; ?>">Editar</a>
+                        <!--caso queira passar por parametro -->
                         <a href="formulario/<?= $video->id; ?>">Editar</a>
                         <a href="excluir-video?id=<?= $video->id; ?>">Excluir</a>
                     </div>

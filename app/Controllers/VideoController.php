@@ -8,7 +8,14 @@ use App\Repositories\VideoRepository;
 
 class VideoController extends Controller
 {
-    public function __construct(private VideoRepository $videoRepository) {}
+    private $loggedUser;
+
+    public function __construct(private VideoRepository $videoRepository) {
+        $this->loggedUser = $_SESSION['LOGGED'] ?? false;
+        if (!isset($_SESSION['LOGGED']) || $this->loggedUser === false) {
+            $this->redirect('/login');
+        }
+    }
 
     public function index(): void
     {
@@ -19,9 +26,11 @@ class VideoController extends Controller
         ]);
     }
 
-    public function formulario(): void
+    public function formulario($atr = []): void
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        // O id pode vir por parametro ou por get
+        $id = $atr['id'] ?? filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
         $video = null;
 
         if ($id) {

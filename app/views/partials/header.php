@@ -20,11 +20,11 @@
 
     <header>
         <nav class="cabecalho">
-            <a class="logo" href="/"></a>
+            <a class="logo" href="<?= $url('/'); ?>"></a>
 
             <div class="cabecalho__icones">
-                <a href="formulario" class="cabecalho__videos"></a>
-                <a href="logout" class="cabecalho__sair">Sair</a>
+                <a href="<?= $url('formulario'); ?>" class="cabecalho__videos"></a>
+                <a href="<?= $url('logout'); ?>" class="cabecalho__sair">Sair</a>
             </div>
         </nav>
 

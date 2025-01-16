@@ -52,7 +52,7 @@ class Controller
             extract($viewData);
             $render = fn($vN, $vD = []) => $this->renderPartial($vN, $vD);
             $base = $this->getBaseUrl();
-            $url = fn($path) => $this->url($path); // função helper
+            $url = fn($path) => $this->url($path); // função helper para algumas rotas
             $asset = fn($path) => $this->url('assets/' . ltrim($path, '/')); // Helper específico para assets
             require '../app/views/' . $folder . '/' . $viewName . '.php';
         }

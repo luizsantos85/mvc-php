@@ -2,22 +2,22 @@
 
 <main class="container">
 
-    <form class="container__formulario">
-        <h2 class="formulario__titulo">Efetue login</h3>
+    <form class="container__formulario" action="<?= $url($action); ?>" method="post">
+        <h2 class="formulario__titulo"><?= $title ?? 'Efetuar login'; ?></h3>
             <div class="formulario__campo">
-                <label class="campo__etiqueta" for="usuario">Usuário</label>
-                <input name="user" class="campo__escrita" required
-                    placeholder="Digite seu usuário" id='usuario' />
+                <label class="campo__etiqueta" for="email">E-mail</label>
+                <input name="email" class="campo__escrita" required
+                    placeholder="Digite seu E-mail" id='email' type="email" />
             </div>
-
 
             <div class="formulario__campo">
                 <label class="campo__etiqueta" for="senha">Senha</label>
-                <input type="password" name="senha" class="campo__escrita" required placeholder="Digite sua senha"
-                    id='senha' />
+                <input type="password" name="senha" class="campo__escrita" required placeholder="Digite sua senha" id='senha' />
             </div>
 
-            <input class="formulario__botao" type="submit" value="Entrar" />
+            <a href="<?= $url($urlA); ?>" style="color: blue; "><?= $textA ?? 'Não possui conta?'; ?></a>
+
+            <input class="formulario__botao" type="submit" value="<?= $btnText ?? 'Entrar'; ?>" />
     </form>
 
 </main>
