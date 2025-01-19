@@ -24,7 +24,9 @@
 
             <div class="cabecalho__icones">
                 <a href="<?= $url('formulario'); ?>" class="cabecalho__videos"></a>
-                <a href="<?= $url('logout'); ?>" class="cabecalho__sair">Sair</a>
+                <a href="<?= $url('logout'); ?>" class="cabecalho__sair">
+                    <?= isset($_SESSION['LOGGED']) ? 'Sair' : 'Entrar' ?>
+                </a>
             </div>
         </nav>
 

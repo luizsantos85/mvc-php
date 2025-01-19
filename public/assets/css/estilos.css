@@ -102,10 +102,29 @@ body {
     cursor: pointer;
 }
 
-.flash__message{
-    color: #444444;
-    margin-top: 150px;
+.flash-message {
+    margin-top: 80px;
+    width: 100%;
+    padding: 12px;  
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    color: white;
+    text-align: center;
 }
+
+.flash-error {
+    background-color: #c62828;
+}
+
+.flash-success {
+    background-color: #43a047;
+}
+
+.flash-warning {
+    background-color: #ffa000;
+}
+
 
 @media(min-width: 834px) {
 

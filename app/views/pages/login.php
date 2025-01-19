@@ -2,17 +2,24 @@
 
 <main class="container">
 
+    <?php if ($hasFlash('message')): ?>
+        <?php $flash = $getFlash('message'); ?>
+        <div class="flash-message flash-<?= $flash['type'] ?>">
+            <?= $flash['message'] ?>
+        </div>
+    <?php endif; ?>
+
     <form class="container__formulario" action="<?= $url($action); ?>" method="post">
         <h2 class="formulario__titulo"><?= $title ?? 'Efetuar login'; ?></h3>
             <div class="formulario__campo">
                 <label class="campo__etiqueta" for="email">E-mail</label>
-                <input name="email" class="campo__escrita" required
+                <input name="email" class="campo__escrita"
                     placeholder="Digite seu E-mail" id='email' type="email" />
             </div>
 
             <div class="formulario__campo">
                 <label class="campo__etiqueta" for="senha">Senha</label>
-                <input type="password" name="senha" class="campo__escrita" required placeholder="Digite sua senha" id='senha' />
+                <input type="password" name="senha" class="campo__escrita" placeholder="Digite sua senha" id='senha' />
             </div>
 
             <a href="<?= $url($urlA); ?>" style="color: blue; "><?= $textA ?? 'Não possui conta?'; ?></a>

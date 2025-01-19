@@ -10,7 +10,8 @@ class VideoController extends Controller
 {
     private $loggedUser;
 
-    public function __construct(private VideoRepository $videoRepository) {
+    public function __construct(private VideoRepository $videoRepository)
+    {
         $this->loggedUser = $_SESSION['LOGGED'] ?? false;
         if (!isset($_SESSION['LOGGED']) || $this->loggedUser === false) {
             $this->redirect('/login');
@@ -53,8 +54,8 @@ class VideoController extends Controller
         $id = trim(filter_input(INPUT_POST, 'id_video', FILTER_SANITIZE_SPECIAL_CHARS));
 
         if (!$url || !$title) {
-            $_SESSION['flash'] = "Preencha todos os campos.";
-            $this->redirect('/formulario?id='.$id);
+            $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
+            $this->redirect('/formulario?id=' . $id);
         }
 
         $video = new Video($url, $title);
@@ -63,11 +64,11 @@ class VideoController extends Controller
         $result = $this->videoRepository->update($video);
 
         if ($result === false) {
-            $_SESSION['flash'] = "Erro ao atualiza.";
+            $this->setFlashMessage('message', "Erro ao atualizar.", 'error');
             $this->redirect('/');
         }
 
-        $_SESSION['flash'] = "Video atualizado com sucesso.";
+        $this->setFlashMessage('message', "Video atualizado com sucesso.", 'success');
         $this->redirect('/');
     }
 
@@ -77,7 +78,8 @@ class VideoController extends Controller
         $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
 
         if (!$url || !$title) {
-            $_SESSION['flash'] = "Preencha todos os campos.";
+            $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
+
             $this->redirect('/formulario');
         }
 
@@ -90,7 +92,7 @@ class VideoController extends Controller
             $this->redirect('/');
         }
 
-        $_SESSION['flash'] = "Video inserido com sucesso.";
+        $this->setFlashMessage('message', "Video inserido com sucesso.", 'success');
         $this->redirect('/');
     }
 
@@ -108,13 +110,12 @@ class VideoController extends Controller
             $result = $this->videoRepository->delete($id);
 
             if ($result === false) {
-                $_SESSION['flash'] = "Erro ao excluir.";
+                $this->setFlashMessage('message', "Erro ao excluir.", 'error');
                 $this->redirect('/');
             }
 
-            $_SESSION['flash'] = "Video excluido com sucesso.";
+            $this->setFlashMessage('message', "Video excluído com sucesso.", 'success');
             $this->redirect('/');
         }
     }
-    
 }

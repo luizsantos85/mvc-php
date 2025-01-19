@@ -24,7 +24,7 @@ class AuthController extends Controller
         $password = trim(filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
         if (!$email || !$password) {
-            $_SESSION['flash'] = "Preencha todos os campos.";
+            $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
             $this->redirect('/login');
         }
 
@@ -32,12 +32,13 @@ class AuthController extends Controller
         $user = $userRepository->findEmailUser($email);
 
         if (!$user) {
-            $_SESSION['flash'] = "Usuário ou senha inválidos.";
+            $this->setFlashMessage('message', 'Usuário ou senha inválidos.', 'error');
             $this->redirect('/login');
         }
 
         if (!password_verify($password, $user['password'] ?? '')) {
-            $_SESSION['flash'] = "E-mail e ou senha inválidos.";
+            $this->setFlashMessage('message', 'Usuário ou senha inválidos.', 'error');
+
             $this->redirect('/login');
         }
 

@@ -24,7 +24,7 @@ class UsersController extends Controller
         $password = trim(filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
         if (!$email || !$password) {
-            $_SESSION['flash'] = "Preencha todos os campos.";
+            $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
             $this->redirect('/create-user');
         }
 
