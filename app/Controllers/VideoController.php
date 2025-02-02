@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Core\Controller;
 use App\Classes\Video;
 use App\Repositories\VideoRepository;
+use App\Services\ImageService;
 
 class VideoController extends Controller
 {
@@ -52,6 +53,8 @@ class VideoController extends Controller
         $url = trim(filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL));
         $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
         $id = trim(filter_input(INPUT_POST, 'id_video', FILTER_SANITIZE_SPECIAL_CHARS));
+        $oldImage = trim(filter_input(INPUT_POST, 'old_image', FILTER_SANITIZE_SPECIAL_CHARS));
+        $image = $_FILES['image'];
 
         if (!$url || !$title) {
             $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
@@ -60,6 +63,22 @@ class VideoController extends Controller
 
         $video = new Video($url, $title);
         $video->setId($id);
+        $video->setFileImage($oldImage);
+
+        if($image['error'] === UPLOAD_ERR_OK){
+            $imageService = new ImageService();
+
+            // Deleta a imagem antiga
+            $oldImage = $video->getFileName();
+
+            if ($oldImage) {
+                $imageService->deleteImage($oldImage);
+            }
+
+            // Salva a nova imagem
+            $imagePath = $imageService->uploadImage($image);
+            $video->setFileImage($imagePath);
+        }
 
         $result = $this->videoRepository->update($video);
 
@@ -76,14 +95,21 @@ class VideoController extends Controller
     {
         $url = trim(filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL));
         $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
+        $image = $_FILES['image'];
 
         if (!$url || !$title) {
             $this->setFlashMessage('message', 'Preencha todos os campos.', 'error');
 
             $this->redirect('/formulario');
         }
-
+        
         $video = new Video($url, $title);
+
+        if($image['error'] === UPLOAD_ERR_OK){
+            $imageService = new ImageService();
+            $imagePath = $imageService->uploadImage($image);
+            $video->setFileImage($imagePath);
+        }
 
         $result = $this->videoRepository->insert($video);
 
@@ -105,6 +131,12 @@ class VideoController extends Controller
 
             if (!$video) {
                 $this->redirect('/');
+            }
+
+            // Deleta a imagem do vídeo
+            if ($video->getFileName()) {
+                $imageService = new ImageService();
+                $imageService->deleteImage($video->getFileName());
             }
 
             $result = $this->videoRepository->delete($id);

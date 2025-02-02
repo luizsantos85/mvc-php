@@ -49,6 +49,11 @@ class VideoRepository
     {
         $video = new Video($videoData['url'], $videoData['title']);
         $video->setId($videoData['id']);
+        
+        if($videoData['image_name'] !== null){
+            $video->setFileImage($videoData['image_name']);
+        }
+
         return $video;
     }
 
@@ -60,9 +65,10 @@ class VideoRepository
      */
     public function insert(Video $video): bool
     {
-        $sql = $this->pdo->prepare("INSERT INTO videos (url,title) values (:url,:title)");
+        $sql = $this->pdo->prepare("INSERT INTO videos (url,title,image_name) values (:url,:title,:image_name)");
         $sql->bindValue(':url', $video->url);
         $sql->bindValue(':title', $video->title);
+        $sql->bindValue(':image_name', $video->getFileName());
         $result = $sql->execute();
 
         if ($result === false) {
@@ -83,9 +89,10 @@ class VideoRepository
      */
     public function update(Video $video): bool
     {
-        $sql = $this->pdo->prepare('UPDATE videos SET url = :url, title = :title WHERE id = :id');
+        $sql = $this->pdo->prepare('UPDATE videos SET url = :url, title = :title, image_name = :image_name WHERE id = :id');
         $sql->bindValue(':url', $video->url);
         $sql->bindValue(':title', $video->title);
+        $sql->bindValue(':image_name', $video->getFileName());
         $sql->bindValue(':id', $video->id);
         return $sql->execute();
 

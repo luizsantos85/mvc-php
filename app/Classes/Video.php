@@ -6,6 +6,7 @@ class Video
 {
     public readonly string $url;
     public readonly int $id;
+    public ?string $fileName = null;
 
     public function __construct(string $url,public readonly string $title)
     {
@@ -25,4 +26,15 @@ class Video
     {
         $this->id = $id;
     }
+
+    public function setFileImage(string $file): void
+    {
+        $this->fileName = $file;
+    }
+
+    public function getFileName(): ?string
+    {
+        return $this->fileName;
+    }
+
 }
