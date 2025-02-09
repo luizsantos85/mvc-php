@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Config\app as Config;
 
 class ImageService
 {

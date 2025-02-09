@@ -22,6 +22,9 @@ class VideoController extends Controller
     public function index(): void
     {
         $listaVideos = $this->videoRepository->findAll();
+        // echo '<pre>';
+        // print_r($listaVideos);
+        // echo '</pre>';exit;
 
         $this->render('home', [
             'listaVideos' => $listaVideos
@@ -147,6 +150,37 @@ class VideoController extends Controller
             }
 
             $this->setFlashMessage('message', "Video excluído com sucesso.", 'success');
+            $this->redirect('/');
+        }
+    }
+
+    public function deleteImage(): void
+    {
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+        if ($id) {
+            $video = $this->videoRepository->find($id);
+
+            if (!$video) {
+                $this->redirect('/');
+            }
+
+            // Deleta a imagem do vídeo
+            if ($video->getFileName()) {
+                $imageService = new ImageService();
+                $imageService->deleteImage($video->getFileName());
+            }
+
+            $video->setFileImage('null');
+
+            $result = $this->videoRepository->update($video);
+
+            if ($result === false) {
+                $this->setFlashMessage('message', "Erro ao excluir.", 'error');
+                $this->redirect('/');
+            }
+
+            $this->setFlashMessage('message', "Imagem excluída com sucesso.", 'success');
             $this->redirect('/');
         }
     }

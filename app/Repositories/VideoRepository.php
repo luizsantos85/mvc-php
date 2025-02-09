@@ -89,11 +89,12 @@ class VideoRepository
      */
     public function update(Video $video): bool
     {
-        $sql = $this->pdo->prepare('UPDATE videos SET url = :url, title = :title, image_name = :image_name WHERE id = :id');
+        $sql = $this->pdo->prepare("UPDATE videos SET url = :url, title = :title , image_name = :image_name WHERE id = :id");
         $sql->bindValue(':url', $video->url);
         $sql->bindValue(':title', $video->title);
-        $sql->bindValue(':image_name', $video->getFileName());
         $sql->bindValue(':id', $video->id);
+        $sql->bindValue(':image_name', $video->getFileName());
+        
         return $sql->execute();
 
         // if ($sql->execute() === false) {

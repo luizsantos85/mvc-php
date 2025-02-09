@@ -29,6 +29,10 @@ class Video
 
     public function setFileImage(string $file): void
     {
+        if($file == "null"){
+            $file = null;
+        }
+        
         $this->fileName = $file;
     }
 
