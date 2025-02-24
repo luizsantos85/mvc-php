@@ -36,9 +36,16 @@ class AuthController extends Controller
             $this->redirect('/login');
         }
 
-        if (!password_verify($password, $user['password'] ?? '')) {
-            $this->setFlashMessage('message', 'Usuário ou senha inválidos.', 'error');
+        $correctPass = password_verify($password, $user['password'] ?? '');
 
+        //Verifica se a senha precisa ser refeita
+        if(password_needs_rehash($user['password'], PASSWORD_ARGON2ID)){ 
+            $newHash = password_hash($password, PASSWORD_ARGON2ID);
+            $userRepository->updatePassword($user['id'], $newHash);
+        }
+
+        if (!$correctPass) {
+            $this->setFlashMessage('message', 'Usuário ou senha inválidos.', 'error');
             $this->redirect('/login');
         }
 

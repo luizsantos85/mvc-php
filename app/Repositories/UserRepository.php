@@ -40,4 +40,12 @@ class UserRepository
         $sql->execute();
     }
 
+    public function updatePassword(int $id, string $password): void
+    {
+        $sql = $this->pdo->prepare('UPDATE users SET password = :password WHERE id = :id');
+        $sql->bindValue(':password', $password, PDO::PARAM_STR);
+        $sql->bindValue(':id', $id, PDO::PARAM_INT);
+        $sql->execute();
+    }
+
 }
