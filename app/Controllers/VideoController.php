@@ -65,32 +65,40 @@ class VideoController extends Controller
         }
 
         $video = new Video($url, $title);
-        $video->setId($id);
-        $video->setFileImage($oldImage);
 
-        if($image['error'] === UPLOAD_ERR_OK){
-            $imageService = new ImageService();
+        try {
+            $video->setId($id);
+            $video->setFileImage($oldImage);
 
-            // Deleta a imagem antiga
-            $oldImage = $video->getFileName();
+            if ($image['error'] === UPLOAD_ERR_OK) {
+                $imageService = new ImageService();
 
-            if ($oldImage) {
-                $imageService->deleteImage($oldImage);
+                // Deleta a imagem antiga
+                $oldImage = $video->getFileName();
+
+                if ($oldImage) {
+                    $imageService->deleteImage($oldImage);
+                }
+
+                // Salva a nova imagem
+                $imagePath = $imageService->uploadImage($image);
+                $video->setFileImage($imagePath);
             }
 
-            // Salva a nova imagem
-            $imagePath = $imageService->uploadImage($image);
-            $video->setFileImage($imagePath);
-        }
+            $result = $this->videoRepository->update($video);
 
-        $result = $this->videoRepository->update($video);
+            if ($result === false) {
+                $this->setFlashMessage('message', "Erro ao atualizar.", 'error');
+                $this->redirect('/');
+            }
 
-        if ($result === false) {
-            $this->setFlashMessage('message', "Erro ao atualizar.", 'error');
+            $this->setFlashMessage('message', "Video atualizado com sucesso.", 'success');
             $this->redirect('/');
+        } catch (\Exception $e) { //Retorna o erro da exception
+            $this->setFlashMessage('message', $e->getMessage(), 'error');
+            $this->redirect('/formulario');
         }
-
-        $this->setFlashMessage('message', "Video atualizado com sucesso.", 'success');
+               
         $this->redirect('/');
     }
 
