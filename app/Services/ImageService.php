@@ -7,9 +7,27 @@ class ImageService
 {
     public function uploadImage(array $file): string
     {
-        $allowedTypes = ['image/jpeg','image/png','image/gif', 'image/webp'];
-        if (!in_array($file['type'], $allowedTypes) || $file['size'] > 5 * 1024 * 1024) {
-            throw new \Exception('Tipo ou tamanho de arquivo inválido.');
+        // $allowedTypes = [IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_WEBP];
+        
+        // Verifica o tipo real do arquivo através da assinatura
+        // $detectedType = @exif_imagetype($file['tmp_name']);
+        // if (!$detectedType || !in_array($detectedType, $allowedTypes)) {
+        //     throw new \Exception('Arquivo não é uma imagem válida.');
+        // }
+
+        // Utiliza finfo para detectar o tipo MIME do arquivo
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimeType = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($mimeType, $allowedMimeTypes)) {
+            throw new \Exception('Arquivo não é uma imagem válida.');
+        }
+
+        // Verifica o tamanho do arquivo
+        if ($file['size'] > 5 * 1024 * 1024) {
+            throw new \Exception('Tamanho do arquivo excede 5MB.');
         }
 
         $uploadDir = __DIR__.'/../../public/assets/img/uploads/';

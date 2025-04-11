@@ -1,12 +1,8 @@
 <?php $render('header'); ?>
 
 <main class="container">
-    <?php if ($hasFlash('message')): ?>
-        <?php $flash = $getFlash('message'); ?>
-        <div class="flash-message flash-<?= $flash['type'] ?>">
-            <?= $flash['message'] ?>
-        </div>
-    <?php endif; ?>
+
+    <?php $render('message_session'); ?>
 
     <form class="container__formulario"
         action="<?= isset($video) && !empty($video->id) ? $url('editar-video') : $url('novo-video') ?>"

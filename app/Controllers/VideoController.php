@@ -108,20 +108,28 @@ class VideoController extends Controller
         
         $video = new Video($url, $title);
 
-        if($image['error'] === UPLOAD_ERR_OK){
-            $imageService = new ImageService();
-            $imagePath = $imageService->uploadImage($image);
-            $video->setFileImage($imagePath);
-        }
+        try {
+            if ($image['error'] === UPLOAD_ERR_OK) {
+                $imageService = new ImageService();
+                $imagePath = $imageService->uploadImage($image);
+                $video->setFileImage($imagePath);
+            }
 
-        $result = $this->videoRepository->insert($video);
+            $result = $this->videoRepository->insert($video);
 
-        if ($result === false) {
-            $_SESSION['flash'] = "Erro ao inserir.";
+            if ($result === false) {
+                $_SESSION['flash'] = "Erro ao inserir.";
+                $this->redirect('/');
+            }
+
+            $this->setFlashMessage('message', "Video inserido com sucesso.", 'success');
             $this->redirect('/');
-        }
 
-        $this->setFlashMessage('message', "Video inserido com sucesso.", 'success');
+        } catch (\Exception $e) { //Retorna o erro da exception
+            $this->setFlashMessage('message', $e->getMessage(), 'error');
+            $this->redirect('/formulario');
+        }
+        
         $this->redirect('/');
     }
 

@@ -1,6 +1,10 @@
 <?php $render('header'); ?>
 
+
 <ul class="videos__container" alt="videos alura">
+    
+    <?php $render('message_session'); ?>
+
     <?php foreach ($listaVideos as $video): ?>
         <?php if (str_starts_with($video->url, 'http')): ?>
             <li class="videos__item">
