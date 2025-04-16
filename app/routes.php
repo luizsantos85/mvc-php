@@ -19,3 +19,5 @@ $router->get('/login', 'AuthController@login');
 $router->post('/login', 'AuthController@loginAction');
 $router->get('/logout', 'AuthController@logout');
 
+$router->get('/json-videos', 'VideoController@jsonVideos');
+$router->post('/json-videos-create', 'VideoController@jsonVideosPost');

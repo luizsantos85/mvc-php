@@ -200,4 +200,54 @@ class VideoController extends Controller
             $this->redirect('/');
         }
     }
+
+    public function jsonVideos(): void
+    {
+        $videos = array_map(function (Video $video): array {
+            return [
+                'url' => $video->url,
+                'title' => $video->title,
+                'file_path' => '/img/uploads/'.$video->getFileName()
+            ];
+
+        },$this->videoRepository->findAll());
+
+        echo json_encode($videos);
+        exit;
+    }
+
+    public function jsonVideosPost(): void
+    {
+        // $url = trim(filter_input(INPUT_POST, 'url', FILTER_VALIDATE_URL));
+        // $title = trim(filter_input(INPUT_POST, 'title', FILTER_SANITIZE_SPECIAL_CHARS));
+
+        $request = file_get_contents('php://input');
+        $data = json_decode($request, true);
+        $url = $data['url'] ?? null;
+        $title = $data['title'] ?? null;
+
+        if (!$url || !$title) {
+            echo json_encode(['error' => 'Preencha todos os campos.']);
+            exit;
+        }
+
+        $video = new Video($url, $title);
+
+        try {
+            $result = $this->videoRepository->insert($video);
+
+            if ($result === false) {
+                echo json_encode(['error' => 'Erro ao inserir.']);
+                exit;
+            }
+
+            http_response_code(201);
+            echo json_encode(['success' => 'Video inserido com sucesso.']);
+            exit;
+
+        } catch (\Exception $e) { //Retorna o erro da exception
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
 }
